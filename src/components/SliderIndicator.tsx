@@ -1,5 +1,5 @@
 import { MinusIcon } from "@chakra-ui/icons"
-import { Button, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 
 interface Props {
     index: number,
@@ -12,7 +12,7 @@ export const SliderIndicator = ({ index, currentSlide, onCurrentSlider }: Props)
         <Text
             color={index === currentSlide ? 'white' : 'whiteAlpha.500'}
             cursor='pointer' textAlign='right'
-            onClick={() => onCurrentSlider(index) }
+            onClick={() => onCurrentSlider(index)}
             _hover={{ color: 'white' }}>{index === currentSlide && <MinusIcon />}
             {index}
         </Text>

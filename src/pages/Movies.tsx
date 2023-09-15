@@ -1,5 +1,5 @@
-import { Badge, Button, HStack, Icon, Image, MenuIcon, MenuList, Select, Show, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { Link, useParams } from "react-router-dom"
+import { Badge, Button, HStack, Image, Select, Show, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
+import { Link } from "react-router-dom"
 import logo from '../assets/favicon.png';
 import home from '../assets/home.png';
 import movieProjector from '../assets/movie-projector.png';
@@ -13,12 +13,11 @@ import listWhite from '../assets/list-white.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import { primaryColor, secondaryColor } from "../App";
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
 const Movies = () => {
-    const { id } = useParams();
+    // const { id } = useParams();
     const [hoveredPlayIcon, setHoveredPlayIcon] = useState(false);
 
     function handleHoveredIn() {
