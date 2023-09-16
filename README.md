@@ -1,27 +1,58 @@
-# React + TypeScript + Vite
+# MOVIE BOX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A movie discovery web application that allows users to search for movies, view details about them, and save their favorite movies. You’ll be consuming data from the TMDB API.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Make sure you have the following software installed on your machine:
 
-## Expanding the ESLint configuration
+- [Node.js](https://nodejs.org/) (v14.x or later)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Getting Started
 
-- Configure the top-level `parserOptions` property like this:
+Follow these steps to run the project locally:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+1. **Clone the repository:**
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+   ```bash
+   git clone https://github.com/destinyayomah/hng-frontend-stage2
+   ```
+2. **Navigate to the project folder:**
+
+   ```bash
+   cd your-repo
+   ```
+3. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+4. **Start the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your web browser and access the development server:**
+
+   The development server will be running at http://localhost:3000. You can access your project in your web browser.
+
+6. **Build the project for production (optional):**
+   
+   To create a production build of your project, run:
+
+   ```bash
+   npm run build
+   ```
+   This will generate optimized production-ready files in the dist folder.
+
+## Conclusion
+Thank you for using the hng-frontend-stage2 Movie Box. If you have any questions or need assistance, please feel free to contact me.
+
+## Stay in touch
+
+- Author - <a href="https://github.com/destinyayomah">Destiny Ayomah</a>
+- LinkedIn - <a href="https://www.linkedin.com/in/destiny-ayomah-822286197">Destiny Ayomah</a>
+- Twitter - <a href="https://twitter.com/destiny_ayomah?t=57a60xIgFqu4TaLqDhRStQ&s=09">@destinyayomah</a>
