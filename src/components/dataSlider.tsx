@@ -2,7 +2,8 @@ const dataSlider = [
     {
         id: 1,
         title: 'Law & Order',
-        image: 'https://www.themoviedb.org/t/p/original/77OPlbsvX3pzoFbyfpcE3GXMCod.jpg'
+        image: 'https://www.themoviedb.org/t/p/original/77OPlbsvX3pzoFbyfpcE3GXMCod.jpg',
+        poster_path: 'https://www.themoviedb.org/t/p/original/77OPlbsvX3pzoFbyfpcE3GXMCod.jpg',
     },
     {
         id: 2,

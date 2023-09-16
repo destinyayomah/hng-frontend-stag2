@@ -94,8 +94,8 @@ const Movies = () => {
                 </Stack>
 
                 <Stack alignItems='start' direction={{ base: 'column', lg: 'row' }}>
-                    <VStack flex='3' fontSize={{ base: '14px' }} width='100%'>
-                        <Text data-testid="movie-overview">{data[0].overview}</Text>
+                    <VStack flex='3' fontSize={{ base: '14px' }} >
+                        <Text width='100%' data-testid="movie-overview">{data[0].overview}</Text>
 
                         <HStack width='100%' margin='20px 0 10px 0' alignItems='start'>
                             <Text>Director:</Text>
