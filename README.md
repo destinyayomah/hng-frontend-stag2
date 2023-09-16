@@ -48,6 +48,8 @@ Follow these steps to run the project locally:
    ```
    This will generate optimized production-ready files in the dist folder.
 
+7. **Live Demo:** <a href="https://hng-frontend-stage2-lict.vercel.app">here</a>
+
 ## Conclusion
 Thank you for using the hng-frontend-stage2 Movie Box. If you have any questions or need assistance, please feel free to contact me.
 
