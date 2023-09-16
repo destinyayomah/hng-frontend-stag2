@@ -1,19 +1,22 @@
 import { Button, Container, HStack, Image, Stack, Text, VStack } from '@chakra-ui/react';
-import dataSlider from './dataSlider';
 import imdb from '../assets/imdb.png';
 import play from '../assets/play.png'
 import { SliderIndicator } from './SliderIndicator';
 import { useEffect, useState } from 'react';
+import usePopularMovies from '../hooks/usePopularMovies';
+import { Movie, baseImgUrlO } from '../App';
 const primaryColor = '#BE123C';
 
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(1);
-  const [selectedMovie, setSelectedMovie] = useState(dataSlider[0]);
   const [imageVisible, setImageVisible] = useState(true);
+  const { data, isLoading, error } = usePopularMovies();
+
+  const [selectedMovie, setSelectedMovie] = useState<Movie>({} as Movie);
 
   function changeSelectedIndicator(index: number) {
     setCurrentSlide(index);
-    setSelectedMovie(dataSlider[index - 1]);
+    setSelectedMovie(data[index - 1]);
   }
 
   useEffect(() => {
@@ -21,29 +24,39 @@ const HeroSlider = () => {
       const nextSlide = currentSlide + 1;
       setImageVisible(false);
 
-      if (nextSlide <= dataSlider.length) {
+      if (nextSlide <= data.slice(0, 5).length) {
         setTimeout(() => {
           setCurrentSlide(nextSlide);
-          setSelectedMovie(dataSlider[nextSlide - 1]);
+          setSelectedMovie(data[nextSlide - 1]);
           setImageVisible(true);
         }, 200);
       } else {
         setCurrentSlide(1);
-        setSelectedMovie(dataSlider[0]);
+        setSelectedMovie(data[0]);
         setImageVisible(true);
       }
     }, 3000);
 
     return () => clearInterval(intervalId);
-  }, [currentSlide]);
+  }, [currentSlide, data]);
 
-  return (
+  useEffect(() => {
+    if (!isLoading) {
+      setSelectedMovie(data[0]);
+    }
+  }, [data]);
+
+  if (error) return <Text>{error}</Text>
+
+  if (isLoading) return <Text>Loading...</Text>
+
+  return <>
     <Stack height='90vh' overflow='hidden' position='relative'>
 
       <div style={{ height: '90vh' }}>
         <Image
-          src={selectedMovie.image}
-          alt={selectedMovie.title}
+          src={baseImgUrlO + selectedMovie.poster_path}
+          alt={selectedMovie.original_title}
           width='100%'
           height='100%'
           objectFit='cover'
@@ -68,17 +81,17 @@ const HeroSlider = () => {
             fontWeight='600'
             lineHeight='1'
           >
-            {selectedMovie.title}
+            {selectedMovie.original_title}
           </Text>
 
           <HStack>
             <Image src={imdb} />
-            <Text color='whiteAlpha.700'>86.0 / 100</Text>
+            <Text color='whiteAlpha.700'>{selectedMovie.vote_average && (selectedMovie.vote_average * 10).toFixed(1)} / 100</Text>
             <Text>🍎</Text>
-            <Text color='whiteAlpha.700'> 97%</Text>
+            <Text color='whiteAlpha.700'> {selectedMovie.popularity && selectedMovie.popularity.toFixed(0)}%</Text>
           </HStack>
 
-          <Text color='white' fontSize={{ base: "12px", md: "16px" }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima fugit, rem numquam iste quis vel eveniet doloribus temporibus praesentium aliquam at tempore commodi? Ipsum, eius suscipit. Ab alias eos architecto.</Text>
+          <Text color='white' fontSize={{ base: "12px", md: "16px" }}>{selectedMovie.overview && selectedMovie.overview.substring(0, 210)}{selectedMovie.overview && selectedMovie.overview.length > 210 && '...'}</Text>
 
           <Button color="white" colorScheme='blackAlpha' bg={primaryColor} leftIcon={<Image src={play} />}>WATCH TRAILER</Button>
         </VStack>
@@ -86,10 +99,10 @@ const HeroSlider = () => {
 
 
       <VStack position='absolute' right='30px' height='100%' justifyContent='center' alignItems='right'>
-        {dataSlider.map((movie, index) => <SliderIndicator key={movie.id} index={index + 1} currentSlide={currentSlide} onCurrentSlider={changeSelectedIndicator} />)}
+        {data.slice(0, 5).map((movie, index) => <SliderIndicator key={movie.id} index={index + 1} currentSlide={currentSlide} onCurrentSlider={changeSelectedIndicator} />)}
       </VStack>
     </Stack>
-  )
+  </>
 }
 
 export default HeroSlider

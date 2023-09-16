@@ -1,17 +1,21 @@
-import { HStack, Image, Stack, Text, VStack } from '@chakra-ui/react'
-import { Movie } from '../App'
+import { Box, HStack, Image, Stack, Text, VStack } from '@chakra-ui/react'
+import { baseImgUrl } from '../App'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import imdb from '../assets/imdb.png'
 import movies from './movies'
 import { useState } from 'react'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
+import { Movies } from '../hooks/useTopRatedMovies'
+import useMovieDetail from '../hooks/useMovieDetail'
 
 interface Props {
     index: number,
-    movie: Movie
+    movie: Movies
 }
 
 const MovieCard = ({ index, movie }: Props) => {
+    const { data, isLoading, error } = useMovieDetail(movie.id);
+
     function hoverBuilder() {
         const array = [];
         for (let i = 0; i < movies.length; i++) {
@@ -26,7 +30,6 @@ const MovieCard = ({ index, movie }: Props) => {
         const updatedHoveredIcons = [...hoveredLoveIcon];
         updatedHoveredIcons[index] = true;
         setHoverLoveIcon(updatedHoveredIcons);
-
     };
 
     const handleLoveIconHoverExit = (index: number) => {
@@ -35,14 +38,18 @@ const MovieCard = ({ index, movie }: Props) => {
         setHoverLoveIcon(updatedHoveredIcons);
     };
 
-    return (
-        <VStack justifyContent='space-between' alignItems='start'>
+    if (error) return <Text>{error}</Text>;
+
+    if (isLoading) return <Text>Loading</Text>
+
+    return <>
+        <VStack justifyContent='space-between' alignItems='start' data-testid="movie-card">
             <Stack width='100%' position='relative'>
-                <Image src={movie.image} />
-                
-                <Stack position='absolute' top='15px' left='15px' bg='whiteAlpha.500' padding='4px 10px' borderRadius='30px'>
+                <Image src={baseImgUrl + movie.poster_path} data-testid="movie-poster" />
+
+                {/* <Stack position='absolute' top='15px' left='15px' bg='whiteAlpha.500' padding='4px 10px' borderRadius='30px'>
                     <Text fontSize='12px' fontWeight='600'>TV SERIES</Text>
-                </Stack>
+                </Stack> */}
 
                 <Stack bg='whiteAlpha.500' padding='8px' position='absolute' right='15px' top='15px' borderRadius='50%'>
                     <FontAwesomeIcon
@@ -55,24 +62,25 @@ const MovieCard = ({ index, movie }: Props) => {
                 </Stack>
             </Stack>
 
-            <Text color='gray.400' fontSize='12' fontWeight='600'>USA, 2016 - Current</Text>
+            <Text color='gray.400' fontSize='12' fontWeight='600'>{data[0].production_countries[0].iso_3166_1}, <span data-testid="movie-release-date">{data[0].release_date.slice(0, 4)}</span> - Current</Text>
 
-            <Text fontSize='18px' fontWeight='700'>{movie.title}</Text>
+            <Text fontSize='18px' fontWeight='700' data-testid="movie-title">{data[0].original_title}</Text>
 
             <HStack justifyContent='space-between' width='100%'>
                 <HStack>
                     <Image src={imdb} />
-                    <Text>86.0 / 100</Text>
+                    <Text>{Math.round(data[0].vote_average * 10)} / 100</Text>
                 </HStack>
+
                 <HStack>
                     <Text>🍎</Text>
-                    <Text>97%</Text>
+                    <Text>{(data[0].popularity).toFixed(0)}%</Text>
                 </HStack>
             </HStack>
 
-            <Text color='gray.400' fontSize='12' fontWeight='600'>Action, Adventure, Horror</Text>
+            <Text color='gray.400' fontSize='12' fontWeight='600'>{data[0].genres.map(genre => <span key={genre.id}>{genre.name} </span>)}</Text>
         </VStack>
-    )
+    </>
 }
 
 export default MovieCard

@@ -1,11 +1,6 @@
 import { Badge, Button, HStack, Image, Select, Show, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import logo from '../assets/favicon.png';
-import home from '../assets/home.png';
-import movieProjector from '../assets/movie-projector.png';
-import tvShow from '../assets/tv-show.png';
-import calendar from '../assets/calendar.png';
-import logout from '../assets/logout.png';
 import star from '../assets/star.png';
 import twoTickets from '../assets/two-tickets.png';
 import list from '../assets/list.png';
@@ -15,10 +10,14 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import { primaryColor, secondaryColor } from "../App";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import SideBar from "../components/SideBar";
+import useMovieDetail from "../hooks/useMovieDetail";
 
 const Movies = () => {
-    // const { id } = useParams();
+    const { id } = useParams();
+
     const [hoveredPlayIcon, setHoveredPlayIcon] = useState(false);
+    const { data, isLoading, error } = useMovieDetail(parseInt(id!));
 
     function handleHoveredIn() {
         setHoveredPlayIcon(true);
@@ -28,20 +27,29 @@ const Movies = () => {
         setHoveredPlayIcon(false);
     }
 
-    const rect = {
-        content: "''",
-        position: 'absolute',
-        bottom: '0',
-        right: '0',
-        width: '5px',
-        backgroundColor: primaryColor,
-        height: '100%',
-        transition: 'height 0.3s ease'
-    };
-
     function toggleMenu() {
-        console.log('toggleMenu');
+        // console.log('toggleMenu');
     }
+
+    function formatMovieDuration(minutes: number) {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+
+        return `${hours}h ${remainingMinutes}m`;
+    }
+
+    function formatNumberToK(number: number) {
+        if (number >= 1000) {
+            const thousands = Math.floor(number / 1000);
+            return `${thousands}k`;
+        } else {
+            return number.toString();
+        }
+    }
+
+    if (error) return <Text>{error}</Text>
+
+    if (isLoading) { return <Text>Loading...</Text> }
 
     return <>
         <Show below="767px">
@@ -56,103 +64,38 @@ const Movies = () => {
         </Show>
 
         <HStack justifyContent='space-between' alignItems='start'>
-            <Show above="md">
-                <VStack minHeight='100vh' flex='1' minWidth='60px' maxWidth='250px' border='1px solid #D9D9D9' borderRadius='0 50px 50px 0' paddingBottom='50px'>
-                    <Link to='/'>
-                        <HStack padding='50px 0'>
-                            <Image src={logo} height={{ base: '2.5rem', sm: '3.5rem' }} cursor='pointer' />
-                            <Show above="lg">
-                                <Text fontSize='24px' fontWeight='600' cursor='pointer'>MovieBox</Text>
-                            </Show>
-                        </HStack>
-                    </Link>
-
-                    <HStack position='relative' width='100%'>
-                        <HStack cursor='pointer' width='100%' justifyContent='center' paddingY='40px' _hover={{ bg: secondaryColor }}>
-                            <Image src={home} />
-                            <Show above="lg">
-                                <Text fontSize='20px' fontWeight='600'>Home</Text>
-                            </Show>
-                        </HStack>
-                    </HStack>
-
-                    <HStack position='relative' width='100%'>
-                        <HStack cursor='pointer' width='100%' justifyContent='center' paddingY='40px' _after={rect} bg={secondaryColor}>
-                            <Image src={movieProjector} />
-                            <Show above="lg">
-                                <Text fontSize='20px' fontWeight='600'>Movies</Text>
-                            </Show>
-                        </HStack>
-                    </HStack>
-
-                    <HStack position='relative' width='100%'>
-                        <HStack cursor='pointer' width='100%' justifyContent='center' paddingY='40px' _hover={{ bg: secondaryColor }}>
-                            <Image src={tvShow} />
-                            <Show above="lg">
-                                <Text fontSize='20px' fontWeight='600'>TV Series</Text>
-                            </Show>
-                        </HStack>
-                    </HStack>
-
-                    <HStack position='relative' width='100%'>
-                        <HStack cursor='pointer' width='100%' justifyContent='center' paddingY='40px' _hover={{ bg: secondaryColor }}>
-                            <Image src={calendar} />
-                            <Show above="lg">
-                                <Text fontSize='20px' fontWeight='600'>Upcoming</Text>
-                            </Show>
-                        </HStack>
-                    </HStack>
-
-                    <Show above="lg">
-                        <VStack width='70%' borderRadius='30px' borderColor={primaryColor} borderWidth='2px' padding='50px 20px' bg={secondaryColor}>
-                            <Text fontSize='15px' fontWeight='600'>Play movie quizes and earn free tickets</Text>
-                            <Text fontSize='12px'>50k people are playing now</Text>
-                            <Button colorScheme="red" variant='ghost' fontSize='12px' borderRadius='30px' bg='#F0C8D2' marginTop='10px'>Start Playing</Button>
-                        </VStack>
-                    </Show>
-
-                    <HStack position='relative' width='100%'>
-                        <HStack cursor='pointer' width='100%' justifyContent='center' paddingY='40px' _hover={{ bg: secondaryColor }}>
-                            <Image src={logout} />
-                            <Show above="lg">
-                                <Text fontSize='20px' fontWeight='600'>Logout</Text>
-                            </Show>
-                        </HStack>
-                    </HStack>
-                </VStack>
-            </Show>
+            <SideBar />
 
             <VStack flex='4' padding='30px'>
                 <Stack position='relative' width='100%' height={{ base: '200px', md: '300px', lg: '450px' }}>
-                    <Image src="https://www.themoviedb.org/t/p/original/rVX05xRKS5JhEYQFObCi4lAnZT4.jpg" height='100%' fit='cover' borderRadius='20px' />
-                    <Stack position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)' color='white' alignItems='center'>
+                    <Image src={"https://www.themoviedb.org/t/p/original" + data[0].poster_path} height='100%' fit='cover' borderRadius='20px' fallbackSrc="https://via.placeholder.com/1000" />
+                    {data[0].video && <Stack position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)' color='white' alignItems='center'>
                         <Stack padding='10px' borderRadius='50%' bg='rgba(217, 217, 217, 0.7)' width='80px' height='80px' justifyContent='center' alignItems='center' textAlign='center'>
                             <FontAwesomeIcon icon={faPlay} fontSize="50px" cursor='pointer' color={hoveredPlayIcon ? primaryColor : 'white'} onMouseEnter={handleHoveredIn} onMouseLeave={handleHoveredOut} />
                         </Stack>
                         <Text fontSize='22px'>Watch Trailer</Text>
-                    </Stack>
+                    </Stack>}
                 </Stack>
 
-                <Stack width='100%' direction={{base: 'column', lg: 'row'}} justifyContent='space-between'>
+                <Stack width='100%' direction={{ base: 'column', lg: 'row' }} justifyContent='space-between'>
                     <Stack direction={{ base: 'column', md: 'row' }} alignItems='start' margin='10px 0' fontSize={{ base: '18px', lg: '20px' }}>
-                        <Text fontWeight='600'>Top Gun: Mavrick • 2022 • PG-13 • 2h 10m </Text>
+                        <Text fontWeight='600'><span data-testid="movie-title">{data[0].original_title}</span> • <span data-testid="movie-release-date">{data[0].release_date.slice(0, 4)}</span> • PG-13 • <span data-testid="movie-runtime">{formatMovieDuration(data[0].runtime)}</span> </Text>
                         <Wrap>
-                            <Badge color={primaryColor} textTransform='capitalize' border='1px solid #F8E7EB' bg='white' borderRadius='30px' padding='2px 10px' cursor='pointer'>Action</Badge>
-                            <Badge color={primaryColor} textTransform='capitalize' border='1px solid #F8E7EB' bg='white' borderRadius='30px' padding='2px 10px' cursor='pointer'>Drama</Badge>
+                            {data[0].genres.map((genre, idx) => <Badge key={idx} color={primaryColor} textTransform='capitalize' border='1px solid #F8E7EB' bg='white' borderRadius='30px' padding='2px 10px' cursor='pointer'>{genre.name}</Badge>)}
                         </Wrap>
                     </Stack>
 
-                    <HStack margin='10px 0' fontSize={{base: '12px'}}>
+                    <HStack margin='10px 0' fontSize={{ base: '12px' }}>
                         <Image src={star} width='24px' height='24px' />
-                        <Text color='blackAlpha.400'>8.5</Text>
+                        <Text color='blackAlpha.400'>{data[0].vote_average.toFixed(1)}</Text>
                         <Text>|</Text>
-                        <Text>350k</Text>
+                        <Text>{formatNumberToK(data[0].vote_count)}</Text>
                     </HStack>
                 </Stack>
 
                 <Stack alignItems='start' direction={{ base: 'column', lg: 'row' }}>
-                    <VStack flex='3' fontSize={{base: '14px'}} width='100%'>
-                        <Text>After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a mission that demands the ultimate sacrifice from those chosen to fly it.</Text>
+                    <VStack flex='3' fontSize={{ base: '14px' }} width='100%'>
+                        <Text data-testid="movie-overview">{data[0].overview}</Text>
 
                         <HStack width='100%' margin='20px 0 10px 0' alignItems='start'>
                             <Text>Director:</Text>
@@ -169,7 +112,7 @@ const Movies = () => {
                             <Text color={primaryColor}>Tom Cruise, Jennifer Connelly, Miles Teller</Text>
                         </HStack>
 
-                        <Stack direction={{base: 'column', sm: 'row'}} width='100%' marginTop='30px' spacing='0' border='1px solid #C7C7C7' borderRadius='10px'>
+                        <Stack direction={{ base: 'column', sm: 'row' }} width='100%' marginTop='30px' spacing='0' border='1px solid #C7C7C7' borderRadius='10px'>
                             <Wrap whiteSpace='nowrap' bg={primaryColor} color='white' borderRadius='10px' padding='10px 20px'>Top rated movie #65</Wrap>
                             <Select _focus={{ borderColor: primaryColor, boxShadow: 'none' }} border='none' placeholder="Awards 9 nominations"></Select>
                         </Stack>
