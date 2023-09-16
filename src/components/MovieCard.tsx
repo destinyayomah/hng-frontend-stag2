@@ -1,8 +1,7 @@
-import { Box, HStack, Image, Stack, Text, VStack } from '@chakra-ui/react'
+import { HStack, Image, Stack, Text, VStack } from '@chakra-ui/react'
 import { baseImgUrl } from '../App'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import imdb from '../assets/imdb.png'
-import movies from './movies'
 import { useState } from 'react'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import { Movies } from '../hooks/useTopRatedMovies'
@@ -10,15 +9,16 @@ import useMovieDetail from '../hooks/useMovieDetail'
 
 interface Props {
     index: number,
-    movie: Movies
+    movie: Movies,
+    moviesCount: number
 }
 
-const MovieCard = ({ index, movie }: Props) => {
+const MovieCard = ({ index, movie, moviesCount }: Props) => {
     const { data, isLoading, error } = useMovieDetail(movie.id);
 
     function hoverBuilder() {
         const array = [];
-        for (let i = 0; i < movies.length; i++) {
+        for (let i = 0; i < moviesCount; i++) {
             array.push(false);
         }
         return array;

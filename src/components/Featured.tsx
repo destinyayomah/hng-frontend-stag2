@@ -22,7 +22,7 @@ const Featured = () => {
             <SimpleGrid columns={{ sm: 1, md: 2, lg: 4 }} spacing='100px'>
                 {!isLoading && data.slice(0, 10).map((movie, index) =>
                     <Link href={'/movies/' + movie.id} key={index} _hover={{ textDecoration: 'none' }}>
-                        <MovieCard index={index} movie={movie} />
+                        <MovieCard index={index} movie={movie} moviesCount={data.slice(0, 10).length} />
                     </Link>
                 )}
             </SimpleGrid>
