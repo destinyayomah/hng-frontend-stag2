@@ -1,5 +1,5 @@
 import { Badge, Button, HStack, Image, Select, Show, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import logo from '../assets/favicon.png';
 import star from '../assets/star.png';
 import twoTickets from '../assets/two-tickets.png';
@@ -53,14 +53,16 @@ const Movies = () => {
 
     return <>
         <Show below="767px">
-            <HStack justify='space-between' padding='0 30px' alignItems='center'>
-                <HamburgerIcon fontSize='30px' onClick={toggleMenu} />
-                <HStack padding='10px 30px 0 30px'>
-                    <Image src={logo} height={{ base: '2.5rem' }} cursor='pointer' />
-                    <Text fontSize='24px' fontWeight='600' cursor='pointer'>MovieBox</Text>
+            <Link to='/'>
+                <HStack justify='space-between' padding='0 30px' alignItems='center'>
+                    <HamburgerIcon fontSize='30px' onClick={toggleMenu} />
+                    <HStack padding='10px 30px 0 30px'>
+                        <Image src={logo} height={{ base: '2.5rem' }} cursor='pointer' />
+                        <Text fontSize='24px' fontWeight='600' cursor='pointer'>MovieBox</Text>
+                    </HStack>
+                    <div></div>
                 </HStack>
-                <div></div>
-            </HStack>
+            </Link>
         </Show>
 
         <HStack justifyContent='space-between' alignItems='start'>

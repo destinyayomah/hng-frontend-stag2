@@ -1,8 +1,9 @@
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { HStack, Link, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { HStack, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import { primaryColor } from '../App'
 import MovieCard from './MovieCard'
 import useTopRatedMovies from '../hooks/useTopRatedMovies'
+import { Link } from 'react-router-dom'
 
 const Featured = () => {
     const { data, isLoading, error } = useTopRatedMovies();
@@ -21,7 +22,7 @@ const Featured = () => {
 
             <SimpleGrid columns={{ sm: 1, md: 2, lg: 4 }} spacing='100px'>
                 {!isLoading && data.slice(0, 10).map((movie, index) =>
-                    <Link href={'/movies/' + movie.id} key={index} _hover={{ textDecoration: 'none' }}>
+                    <Link to={'/movies/' + movie.id} key={index}>
                         <MovieCard index={index} movie={movie} moviesCount={data.slice(0, 10).length} />
                     </Link>
                 )}
